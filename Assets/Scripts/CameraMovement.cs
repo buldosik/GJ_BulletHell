@@ -20,7 +20,7 @@ public class CameraMovement : MonoBehaviour
         else
             playerOffset = Vector3.zero;*/
         Vector3 playerOffset =  distanceOfMouseOffset * 2f * new Vector3(Input.mousePosition.x / Screen.width - 0.5f, 0f, Input.mousePosition.y / Screen.height - 0.5f);
-        Debug.Log(playerOffset);
+        //Debug.Log(playerOffset);
 
         Vector3 position = player.transform.position - new Vector3 (0f, player.transform.position.y, 0f);
         transform.position = position + offset + playerOffset;
