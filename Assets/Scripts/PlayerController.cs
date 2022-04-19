@@ -6,11 +6,16 @@ public class PlayerController : MonoBehaviour
 {
     private Rigidbody _rb => GetComponent<Rigidbody>();
     [SerializeField] private Camera cam;
-
+    [SerializeField] private bool enabledMovement;
+    [SerializeField] private bool enabledRotation;
+    [SerializeField] private bool enabledDash;
+    [SerializeField] private bool enabledShooting;
     [SerializeField] public Weapon playerWeapon;
+
     private void Update()
     {
-        Movement(); 
+        if(enabledMovement)
+            Movement(); 
 
         Vector3 _direction = transform.TransformDirection(Vector3.forward);
         Debug.DrawRay(transform.position, _direction * 5, Color.yellow);
@@ -20,11 +25,13 @@ public class PlayerController : MonoBehaviour
         Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
         if (Physics.Raycast (ray, out hit, 1000, layerMask)) {
             Vector3 target = hit.point;
-            target = new Vector3(target.x, 0.25f, target.z);
-            if(hit.transform.tag == "floor")
+            target = new Vector3(target.x, transform.position.y, target.z);
+            if(enabledRotation && hit.transform.tag == "floor")
                 Rotate(target);
-            if(Input.GetMouseButtonDown(0))
+            if(enabledShooting && Input.GetButtonDown("Fire1"))
                 playerWeapon.Shoot(target);
+            if(enabledDash && Input.GetButtonDown("Jump"))
+                Dash();
         }
     }
 
@@ -56,6 +63,20 @@ public class PlayerController : MonoBehaviour
         transform.LookAt(target, Vector3.up);
     }
 
+    [SerializeField] private float dashDistance;
+    private void Dash()
+    {
+        float movementVertical = Input.GetAxis("Vertical");
+        float movementHorizontal = Input.GetAxis("Horizontal");
 
+        Vector3 direction = new Vector3(movementHorizontal, 0, movementVertical);
+        
+        //movement = movement.normalized;
+        
+        if(movementVertical == 0 && movementHorizontal == 0)
+            return;
+
+        transform.position += Vector3.ClampMagnitude(direction * dashDistance, dashDistance);
+    }
     
 }

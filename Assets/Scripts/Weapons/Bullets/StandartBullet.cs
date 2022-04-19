@@ -6,6 +6,7 @@ public class StandartBullet : MonoBehaviour
 {
     private Rigidbody _rb => GetComponent<Rigidbody>();
     [SerializeField] private float bulletSpeed;
+    public int damage;
     void Update()
     {
         _rb.velocity = transform.forward * bulletSpeed;
