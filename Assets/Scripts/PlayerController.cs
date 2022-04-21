@@ -10,8 +10,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private bool enabledRotation;
     [SerializeField] private bool enabledDash;
     [SerializeField] private bool enabledShooting;
-    [SerializeField] public Weapon playerWeapon;
-
+    [SerializeField] private Weapon playerWeapon;
+    [SerializeField] private Transform weaponSource;
     private void Update()
     {
         if(enabledMovement)
@@ -29,7 +29,7 @@ public class PlayerController : MonoBehaviour
             if(enabledRotation && hit.transform.tag == "floor")
                 Rotate(target);
             if(enabledShooting && Input.GetButtonDown("Fire1"))
-                playerWeapon.Shoot(target);
+                playerWeapon.Shoot(weaponSource, "missile");
             if(enabledDash && Input.GetButtonDown("Jump"))
                 Dash();
         }

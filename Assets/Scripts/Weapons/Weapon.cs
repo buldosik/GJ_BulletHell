@@ -4,12 +4,19 @@ using UnityEngine;
 
 public class Weapon : MonoBehaviour
 {
-    [SerializeField] private GameObject bullet;
-    private GameObject player => GameObject.FindWithTag("player");
-    public virtual void Shoot(Vector3 target)
+    [SerializeField] public GameObject bullet;
+    public virtual void Shoot(Transform source, string tag)
     {
         GameObject newBullet = Instantiate(bullet);
-        newBullet.transform.position = player.transform.position;
-        newBullet.transform.rotation = player.transform.rotation;
+        newBullet.tag = tag;
+        newBullet.transform.position = source.transform.position;
+        newBullet.transform.rotation = source.transform.rotation;
+    }
+    public virtual void Shoot(Transform source, Vector3 target, string tag)
+    {
+        GameObject newBullet = Instantiate(bullet);
+        newBullet.tag = tag;
+        newBullet.transform.position = source.transform.position;
+        newBullet.transform.rotation = source.transform.rotation;
     }
 }
