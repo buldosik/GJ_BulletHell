@@ -5,12 +5,13 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     private Rigidbody _rb => GetComponent<Rigidbody>();
+    [SerializeField] private int healthPoints;
     [SerializeField] private Camera cam;
     [SerializeField] private bool enabledMovement;
     [SerializeField] private bool enabledRotation;
     [SerializeField] private bool enabledDash;
     [SerializeField] private bool enabledShooting;
-    [SerializeField] private Weapon playerWeapon;
+    public Weapon playerWeapon;
     [SerializeField] private Transform weaponSource;
     private void Update()
     {
@@ -18,7 +19,7 @@ public class PlayerController : MonoBehaviour
             Movement(); 
 
         Vector3 _direction = transform.TransformDirection(Vector3.forward);
-        Debug.DrawRay(transform.position, _direction * 5, Color.yellow);
+        //Debug.DrawRay(transform.position, _direction * 5, Color.yellow);
 
         int layerMask = 1 << 6;
         RaycastHit hit;
@@ -79,4 +80,36 @@ public class PlayerController : MonoBehaviour
         transform.position += Vector3.ClampMagnitude(direction * dashDistance, dashDistance);
     }
     
+    private bool isInvincible;
+    [SerializeField] public float invicbleTime;
+    void OnTriggerEnter(Collider collider)
+    {
+        if(collider.tag == "bullet")
+        {
+            if(!isInvincible)
+                AddHP(-collider.GetComponent<StandartBullet>().damage);
+            Destroy(collider.gameObject);
+        }
+        if(collider.TryGetComponent<Powerup>(out Powerup component))
+        {
+            component.Apply(gameObject);
+        }
+    }
+    IEnumerator invincibleTimer()
+    {
+        isInvincible = true;
+        yield return new WaitForSeconds(invicbleTime);
+        isInvincible = false;
+    }
+
+    public void AddHP(int x)
+    {  
+        healthPoints += x;
+        if(healthPoints < 0)
+        {
+            Debug.Log("Game over");
+            Destroy(gameObject);
+        }
+    }
+
 }

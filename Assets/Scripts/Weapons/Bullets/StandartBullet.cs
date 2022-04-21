@@ -4,13 +4,23 @@ using UnityEngine;
 
 public class StandartBullet : MonoBehaviour
 {
-    private Rigidbody _rb => GetComponent<Rigidbody>();
-    [SerializeField] private float bulletSpeed;
+    protected Rigidbody _rb => GetComponent<Rigidbody>();
+    [SerializeField] protected float bulletSpeed;
     public int damage;
-    void Update()
+    [SerializeField] protected float lifeTime = 5f;
+    protected virtual void Update()
+    {
+        lifeTime -= Time.deltaTime;
+        if(lifeTime < 0f)
+            Destroy(gameObject);
+        Movement();
+    }
+    protected virtual void Movement()
     {
         _rb.velocity = transform.forward * bulletSpeed;
-        if(Mathf.Abs(transform.position.x) > 15f || Mathf.Abs(transform.position.z) > 15f)
-            Destroy(gameObject);
+    }
+    public void AddDamage(int x)
+    {
+        damage += x;
     }
 }
