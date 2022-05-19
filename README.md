@@ -1,4 +1,4 @@
 # GJ_BulletHell
 
-Top-Down shooter
+Top-Down shooter\n
 Was created for GameJam
